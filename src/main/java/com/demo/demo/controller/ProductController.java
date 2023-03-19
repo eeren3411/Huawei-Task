@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -92,4 +93,36 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createProductBody);
     }
     
+    @PutMapping("/update")
+    public ResponseEntity<CreateProductBody> put(@RequestBody CreateProductBody createProductBody) {
+        if (createProductBody.getProduct_id() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(createProductBody);
+        } else if (!productRepository.existsById(createProductBody.getProduct_id())) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(createProductBody);
+        }
+
+        Product product = new Product(
+            createProductBody.getProduct_id(),
+            createProductBody.getStock_count(),
+            createProductBody.getPrice()
+        );
+
+        ProductName productName = new ProductName(
+            createProductBody.getProduct_id(),
+            createProductBody.getName(),
+            createProductBody.getTr_TR(),
+            createProductBody.getEn_US(),
+            createProductBody.getEn_UK(),
+            createProductBody.getFr_FR(),
+            createProductBody.getJp_JP()
+        );
+
+        productRepository.deleteById(createProductBody.getProduct_id());
+        productNameRepository.deleteById(createProductBody.getProduct_id());
+
+        productRepository.save(product);
+        productNameRepository.save(productName);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(createProductBody);
+    }
 }
