@@ -15,13 +15,13 @@ public class Product {
     private int stock_count;
     
     @Column(name = "price")
-    private double price;
+    private Double price;
 
     public Product() {
 
     }
 
-    public Product(Integer productId, int stockCount, double price) {
+    public Product(Integer productId, int stockCount, Double price) {
         this.product_id = productId;
         this.stock_count = stockCount;
         this.price = price;
@@ -43,11 +43,11 @@ public class Product {
         this.stock_count = stock_count;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 }

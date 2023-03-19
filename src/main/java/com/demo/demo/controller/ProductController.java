@@ -49,17 +49,36 @@ public class ProductController {
     @GetMapping("/get")
     public ResponseEntity<List<FullProduct>> getAll(@RequestParam(required = false, name = "locale") String locale){
         ArrayList<FullProduct> finalProducts = new ArrayList<FullProduct>();
+        Double conversionRate = 1.0;
+        try {
+            String from = locales.get("def");
+            String to = locale == null? locales.get("def") : locales.getOrDefault(locale, locales.get("def"));
+            conversionRate = Currency.getRate(from, to);
+        } catch (Exception e) {
+            System.out.println("Something wrong with conversino API");
+        }
 
         Map<Integer, Product> products = productRepository.findAllMap();
         Map<Integer, ProductName> productNames = productNameRepository.findAllMap();
 
         for(Integer productId : products.keySet()) {
-            finalProducts.add(new FullProduct(
+            Product tempProduct = products.get(productId);
+            ProductName tempProductName = productNames.get(productId);
+
+            String name = productNames.keySet().contains(productId)? tempProductName.getName(locale) : null;
+            
+            Double defaultPrice = tempProduct.getPrice() != null? tempProduct.getPrice() : 0.0;
+            Double resultPrice = defaultPrice*conversionRate;
+            String price = String.format("%.2f %s", resultPrice, locales.getOrDefault(locale, locales.get("def")));
+
+            FullProduct tempFullProduct = new FullProduct(
                 productId,
-                productNames.keySet().contains(productId)? productNames.get(productId).getName(locale == null? "def": locale): null,
-                products.get(productId).getStock_count(),
-                products.get(productId).getPrice()
-            ));
+                name,
+                tempProduct.getStock_count(),
+                price
+            );
+
+            finalProducts.add(tempFullProduct);
         }
 
         return ResponseEntity.ok(finalProducts);

@@ -8,9 +8,9 @@ public class FullProduct {
 
     private Integer stock_count;
 
-    private double price;
+    private String price;
 
-    public FullProduct(Integer product_id, String name, Integer stock_count, double price) {
+    public FullProduct(Integer product_id, String name, Integer stock_count, String price) {
         this.product_id = product_id;
         this.name = name;
         this.stock_count = stock_count;
@@ -41,11 +41,11 @@ public class FullProduct {
         this.stock_count = stock_count;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
