@@ -6,14 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.demo.repository.ProductNameRepository;
 import com.demo.demo.repository.ProductRepository;
 import com.demo.demo.model.Product;
 import com.demo.demo.model.ProductName;
+import com.demo.demo.model.CreateProductBody;
 import com.demo.demo.model.FullProduct;
 
 @RestController
@@ -58,6 +62,34 @@ public class ProductController {
         }
 
         return ResponseEntity.ok(finalProducts);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<CreateProductBody> create(@RequestBody CreateProductBody createProductBody) {
+        Product product = new Product(
+            createProductBody.getProduct_id(),
+            createProductBody.getStock_count(),
+            createProductBody.getPrice()
+        );
+
+        ProductName productName = new ProductName(
+            createProductBody.getProduct_id(),
+            createProductBody.getName(),
+            createProductBody.getTr_TR(),
+            createProductBody.getEn_US(),
+            createProductBody.getEn_UK(),
+            createProductBody.getFr_FR(),
+            createProductBody.getJp_JP()
+        );
+
+        if(productRepository.existsById(createProductBody.getProduct_id())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(createProductBody);
+        }
+
+        productRepository.save(product);
+        productNameRepository.save(productName);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createProductBody);
     }
     
 }
