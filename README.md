@@ -51,3 +51,6 @@ Content-Type: application/json
     "fr_FR": "fr_FafaR",
     "jp_JP": "jp_asdJP"
 }
+
+## Final notes
+This is a very basic spring boot implementation with PostgreSQL. Since PostgreSQL supports JSON as a type, localization could be done using it and it would be way better than this but I actually never used PostgreSQL JSON type so it didn't occur to me until the very end of the project.
