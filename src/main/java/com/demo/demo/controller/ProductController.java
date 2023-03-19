@@ -17,7 +17,7 @@ import com.demo.demo.model.ProductName;
 import com.demo.demo.model.FullProduct;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api")
 public class ProductController {
     
     private final HashMap<String, String> locales;
@@ -41,7 +41,7 @@ public class ProductController {
         locales.put("jp_JP", "YEN");
     }
 
-    @GetMapping("/all")
+    @GetMapping("/get")
     public ResponseEntity<List<FullProduct>> getAll(@RequestParam(required = false, name = "locale") String locale){
         ArrayList<FullProduct> finalProducts = new ArrayList<FullProduct>();
 
