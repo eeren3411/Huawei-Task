@@ -85,6 +85,9 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<CreateProductBody> create(@RequestBody CreateProductBody createProductBody) {
+        if (createProductBody.getProduct_id() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(createProductBody);
+        }
         Product product = new Product(
             createProductBody.getProduct_id(),
             createProductBody.getStock_count(),
